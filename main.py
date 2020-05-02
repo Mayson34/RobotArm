@@ -94,11 +94,11 @@ class drawArm:
         elif any(self.getAngleShoulder()) == 180 and self.wrist[1] <= .1 and self.wrist[0] <= 0:
             print ("ELIF 2")
             self.wrist[0] = -.1
-            self.wrist[1] = -.1
+            self.wrist[1] =  0
 
         elif any(self.getAngleShoulder() == 180) and self.wrist[1] <= .1 and self.wrist[0] >= 0:
             print ("ELIF 3")
-            self.wrist[1] = .1
+            self.wrist[1] = 0
             self.wrist[0] = -.1
 
         elif any(self.getAngleShoulder() > 50) and self.elbow[0] < -.5 and self.elbow[1] < 0:
@@ -189,14 +189,38 @@ class drawArm:
 arm = drawArm()
 
 
-theta0 = 1
-theta1 = 2 #cannot be less than 0
+theta0 = -1
+theta1 = .5 #cannot be less than 0
 
+wristX = 0
+wristY = 0
 if theta1 < 0:
     theta1 = 0
 if theta1 > 3:
     theta1 = 3
+print ("Elbow ")
+print (arm.elbow[0])
+print (arm.elbow[1])
+print ("Wrist ")
+print (arm.wrist[0])
+print (arm.wrist[1])
+'''
+if arm.wrist[0] > wristX:
+
+    while arm.wrist[0] > wristX:
+        theta1 = theta1 +.1
+        print ("Theta1 ")
+        print (theta1)
+        arm.updateJoints([theta0, theta1])
+        '''
+print ("Elbow ")
+print (arm.elbow[0])
+print (arm.elbow[1])
+print ("Wrist ")
+print (arm.wrist[0])
+print (arm.wrist[1])
 arm.updateJoints([theta0, theta1])
+
 
 
 arm.plot()
