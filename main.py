@@ -36,7 +36,7 @@ class drawArm:
 
 
         self.angle1 = np.degrees(angle)
-        #return np.degrees(angle)
+        
 
 
     def findAngleShoulder(self):
@@ -51,7 +51,7 @@ class drawArm:
 
 
         self.angle2 = np.degrees(angle)
-        #return np.degrees(angle)
+        
 
     def getAngleElbow(self):
         self.findAngleElbow()
@@ -78,45 +78,40 @@ class drawArm:
 
     def checkAngle(self):
 
-
         length0 = self.beamLengths[0]
         length1 = self.beamLengths[1]
-        print("FIRST: ")
-        print (self.getAngleShoulder())
-
-        print (self.findSlope(self.shoulder[0], self.shoulder[1], self.elbow[0], self.elbow[1]))
-        print (self.findSlope(self.elbow[0], self.elbow[1], self.wrist[0], self.wrist[1]))
 
         if self.elbow[0] < 0 and self.elbow[1] > 0:
+
             self.elbow[0] = 0
             self.elbow[1] = 2
             theta0 = self.T0
             theta1 = self.T1
             self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
-            print ("IF")
+            
 
         elif self.elbow[0] < 0 and self.elbow[1] == 1:
+            
             self.elbow[0] = 0
             self.elbow[1] = 1
             self.wrist = self.elbow + np.array([self.length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
-            print ("ELIF 1")
+            
 
 
         elif any(self.getAngleShoulder()) == 180 and self.wrist[1] <= .1 and self.wrist[0] <= 0:
-            print ("ELIF 2")
+            
             self.wrist[0] = -.1
             self.wrist[1] =  0
 
         elif any(self.getAngleShoulder() == 180) and self.wrist[1] <= .1 and self.wrist[0] >= 0:
-            print ("ELIF 3")
+            
             self.wrist[1] = 0
             self.wrist[0] = -.1
 
         elif any(self.getAngleShoulder() > 50) and self.elbow[0] < -.5 and self.elbow[1] < 0:
             
             while all(self.getAngleShoulder() > 50):
-                print ("ELIF 4 WHILE 1")
-                print (self.getAngleShoulder())
+
                 self.elbow[0] = self.elbow[0] + .01
                 self.elbow[1] = self.elbow[1] - .01
                 theta0 = self.T0
@@ -168,12 +163,6 @@ class drawArm:
         theta0 = atan2(y1, x1) - atan2((length1 * sin(theta1)) , (length0 + length1 * cos(theta1)))
         self.T1 = theta1
         self.T0 = theta0
-        print(((-x1**2) + (y1**2) -2**2 - 2**2))
-        print(acos(0))
-        print("theta1")
-        print(theta1)
-        print("theta0")
-        print(theta0)
         if theta1 < 0:
             theta1 = 0
         elif theta1 > 3:
@@ -214,9 +203,9 @@ if theta1 < 0:
     theta1 = 0
 if theta1 > 3:
     theta1 = 3
-    '''
-#arm.updateJointsFK([theta0, theta1])
-
+    
+arm.updateJointsFK([theta0, theta1])
+'''
 arm.updateJointsIK(wristX, wristY)
 
 
