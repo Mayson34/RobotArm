@@ -1,3 +1,5 @@
+
+
 from math import cos, acos, sin, atan, atan2, atanh
 from math import degrees
 import numpy as np
@@ -5,6 +7,14 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from math import sqrt
 from math import pi
+
+class Error(Exception):
+   "Base class for  exceptions"
+   pass
+
+class InvalidValue(Error):
+   "Raised when an invalid value is entered"
+   pass
 
 
 class drawArm:
@@ -192,8 +202,40 @@ class drawArm:
         self.findAngleElbow()
 
 arm = drawArm()
-wristX = 4
-wristY = 0
+
+while True:
+    try:
+
+        wristX = int(input("Enter the X value: "))
+        
+        if wristX < -4 or wristX > 4:
+            raise InvalidValue
+
+        elif isinstance(wristX,int) == False:
+            raise ValueError
+        break
+    except InvalidValue:
+        print("Invalid X value, try again.")
+    except ValueError:
+        print("Value needs to be an integer, try again.")
+
+while True:
+    try:
+
+        wristY = int(input("Enter the Y value: "))
+        
+        if wristY < -4 or wristY > 4:
+            raise InvalidValue
+
+        elif isinstance(wristY,int) == False:
+            raise ValueError
+        break
+    except InvalidValue:
+        print("Invalid Y value, try again.")
+
+    except ValueError:
+        print("Value needs to be an integer, try again.")
+        
 '''
 theta0 = -1
 theta1 = 1 #cannot be less than 0
