@@ -30,7 +30,7 @@ class drawArm:
         self.torso = np.array([(0, 0), (-1, 0)]) #array used to plot the torso so it can be used to calculate the angle of the upper arm 
         self.beamLengths = [2, 2]
         #self.updateJointsFK(jointAngles) # Can be uncommented out if you would like to use forward kinematics to just move the joints around
-        self.updateJointsIK(1, 0) # Inverse kinematics use to move the end effector to the desired position
+        self.updateJointsIK(4, 0) # Inverse kinematics use to move the end effector to the desired position
         self.angle1 = 0 # Varibles for angle calculations
         self.angle2 = 0
         self.T1 = 0
@@ -38,21 +38,6 @@ class drawArm:
 
 
 
-
-    def findAngleElbow(self):
-
-        # Method used to get the angle of the forearm using vectors
-        vect1 = self.wrist - self.elbow
-        vect2 = self.shoulder - self.elbow
-
-        cosAngle = np.dot(vect1, vect2) / np.linalg.norm(vect1) * np.linalg.norm(vect2)
-
-
-
-        angle = np.arccos(cosAngle)
-
-
-        self.angle1 = np.degrees(angle)
         
 
 
@@ -71,11 +56,7 @@ class drawArm:
         self.angle2 = np.degrees(angle)
         
 
-    def getAngleElbow(self):
 
-        # Getter mehtod for forearm angle
-        self.findAngleElbow()
-        return self.angle1
 
     def getAngleShoulder(self):
 
@@ -172,10 +153,10 @@ class drawArm:
         self.elbow = self.shoulder + np.array([length0 * cos(theta0), length0 * sin(theta0)])
         self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
         self.findAngleShoulder()
-        self.findAngleElbow()
+        
         self.checkAngle()
         self.findAngleShoulder()
-        self.findAngleElbow()
+        
 
     def inverseKinematics(self,x,y):
 
@@ -204,10 +185,9 @@ class drawArm:
         self.elbow = self.shoulder + np.array([length0 * cos(theta0), length0 * sin(theta0)])
         self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
         self.findAngleShoulder()
-        self.findAngleElbow()
         self.checkAngle()
         self.findAngleShoulder()
-        self.findAngleElbow()
+        
 
     def plot(self):
 
