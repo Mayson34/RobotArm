@@ -140,8 +140,7 @@ class drawArm:
                     self.wrist[1] = self.wrist[1] - .1
                 
                 
-                # Make sure the wrist is updated as well
-                #self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
+           
                 
 
     def forwardKinematics(self):
@@ -187,9 +186,9 @@ class drawArm:
         elif frac > 1:
             frac = 1
         
-        print(acos(frac))
         theta1 = acos(frac)
 
+        # The IF/ELIF block is an extra check used to make sure that the AI doesn't move the forearm to an invalid position
         if theta1 < 0:
             theta1 = 0
         elif theta1 > 3:
@@ -201,11 +200,8 @@ class drawArm:
         self.T1 = theta1
         self.T0 = theta0
 
-        # The IF/ELIF block is an extra check used to make sure that the AI doesn't move the forearm to an invalid position
-        if theta1 < 0:
-            theta1 = 0
-        elif theta1 > 3:
-            theta1 = 3
+        
+       
         
         # Updating the position and checking to make sure that it is a valid one
         self.elbow = self.shoulder + np.array([length0 * cos(theta0), length0 * sin(theta0)])
