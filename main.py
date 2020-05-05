@@ -9,7 +9,6 @@ from math import cos, acos, sin, atan, atan2, atanh
 from math import degrees
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import animation
 from math import sqrt
 from math import pi
 
@@ -203,6 +202,8 @@ class drawArm:
         if x1 == -3 or x1 == -4 and y1 == -1:
             y1 = -2
         elif x1 == -3 and y1 == 0:
+            y1 = 1
+        elif x1 == -2 and y1 == 0:
             y1 = 1
         
 
