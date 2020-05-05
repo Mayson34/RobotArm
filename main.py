@@ -100,7 +100,7 @@ class drawArm:
            
             # Ensure that the wrist point is updated with the elbow point
             self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
-            print("1")
+            
 
         elif self.elbow[0] < 0 and self.elbow[1] == 2:
             
@@ -109,7 +109,7 @@ class drawArm:
             self.elbow[1] = 2
             # Ensure that the wrist point is updated with the elbow point
             self.wrist = self.elbow + np.array([self.length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
-            print("2")
+            
 
 
         elif any(self.getAngleShoulder()) == 180 and self.wrist[1] <= .1 and self.wrist[0] <= 0:
@@ -117,7 +117,7 @@ class drawArm:
             # This ELIF statement makes sure that the forearm doesn't  move past a particular point after it goes behind the head with a wrist X value of less than or equal to 0
             self.wrist[0] = -.1
             self.wrist[1] =  0
-            print("3")
+            
         elif any(self.getAngleShoulder() == 180) and self.wrist[1] <= .1 and self.wrist[0] >= 0:
             
             # This ELIF statement makes sure that the forearm doesn't  move past a particular point after it goes behind the head with a wrist X value of greater than or equal to 0
@@ -128,7 +128,7 @@ class drawArm:
             
             # This ELIF statement makes sure that the upper arm can't move more than 50 degrees away from the torso if its pointing down and behind the body
             while all(self.getAngleShoulder() > 50):
-                print("4")
+                
                 # The while statement moves the upper arm back towards the torso if it tries to go past 50 degrees away from the torso
                 self.elbow[0] = self.elbow[0] + .01
                 self.elbow[1] = self.elbow[1] - .01
@@ -175,7 +175,7 @@ class drawArm:
 
         
         # The theta values are calculated using geometry and trig functions. The forearm position is calculated first becuase the result is needed to find the position of the upper arm 
-        print(((x1)**2 + (y1)**2 - 2**2 - 2**2))
+        
 
         numerator = ((x1)**2 + (y1)**2 - 2**2 - 2**2)
         denominator = ( 2 * 2 * 2)
