@@ -88,17 +88,19 @@ class drawArm:
         # Method used to ensure that the arm moves like a human arm
         length0 = self.beamLengths[0]
         length1 = self.beamLengths[1]
+        theta0 = self.T0
+        theta1 = self.T1
+       
 
         if self.elbow[0] < 0 and self.elbow[1] > 0:
             
             # This IF statement makes sure that the upper arm can't move baackwards if its pointing up as if it was next to your head
             self.elbow[0] = 0
             self.elbow[1] = 2
-            theta0 = self.T0
-            theta1 = self.T1
+           
             # Ensure that the wrist point is updated with the elbow point
             self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
-            
+            print("1")
 
         elif self.elbow[0] < 0 and self.elbow[1] == 2:
             
@@ -107,7 +109,7 @@ class drawArm:
             self.elbow[1] = 2
             # Ensure that the wrist point is updated with the elbow point
             self.wrist = self.elbow + np.array([self.length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
-            
+            print("2")
 
 
         elif any(self.getAngleShoulder()) == 180 and self.wrist[1] <= .1 and self.wrist[0] <= 0:
@@ -115,7 +117,7 @@ class drawArm:
             # This ELIF statement makes sure that the forearm doesn't  move past a particular point after it goes behind the head with a wrist X value of less than or equal to 0
             self.wrist[0] = -.1
             self.wrist[1] =  0
-
+            print("3")
         elif any(self.getAngleShoulder() == 180) and self.wrist[1] <= .1 and self.wrist[0] >= 0:
             
             # This ELIF statement makes sure that the forearm doesn't  move past a particular point after it goes behind the head with a wrist X value of greater than or equal to 0
@@ -126,15 +128,20 @@ class drawArm:
             
             # This ELIF statement makes sure that the upper arm can't move more than 50 degrees away from the torso if its pointing down and behind the body
             while all(self.getAngleShoulder() > 50):
-                
+                print("4")
                 # The while statement moves the upper arm back towards the torso if it tries to go past 50 degrees away from the torso
                 self.elbow[0] = self.elbow[0] + .01
                 self.elbow[1] = self.elbow[1] - .01
-                theta0 = self.T0
-                theta1 = self.T1
-               
-                # Make sure the wrist is updated as well
+
                 self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
+            if self.wrist[1] > -2 and self.wrist[0] < -2:
+                while self.wrist[1] > -2:
+                    self.wrist[0] = self.wrist[0] + .1
+                    self.wrist[1] = self.wrist[1] - .1
+                
+                
+                # Make sure the wrist is updated as well
+                #self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
                 
 
     def forwardKinematics(self):
@@ -168,7 +175,26 @@ class drawArm:
 
         
         # The theta values are calculated using geometry and trig functions. The forearm position is calculated first becuase the result is needed to find the position of the upper arm 
-        theta1 = acos( ((x1)**2 + (y1)**2 - 2**2 - 2**2) / ( 2 * 2 * 2))
+        print(((x1)**2 + (y1)**2 - 2**2 - 2**2))
+
+        numerator = ((x1)**2 + (y1)**2 - 2**2 - 2**2)
+        denominator = ( 2 * 2 * 2)
+        frac = numerator/denominator
+
+        if frac < -1:
+            frac = -1
+        
+        elif frac > 1:
+            frac = 1
+        
+        print(acos(frac))
+        theta1 = acos(frac)
+
+        if theta1 < 0:
+            theta1 = 0
+        elif theta1 > 3:
+            theta1 = 3
+
         theta0 = atan2(y1, x1) - atan2((length1 * sin(theta1)) , (length0 + length1 * cos(theta1)))
 
         # Assigning the T1 and T0 variables so the theta values can be used in other methods such as checkAngle
