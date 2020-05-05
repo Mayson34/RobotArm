@@ -95,12 +95,12 @@ class drawArm:
         theta1 = self.T1
        
 
-        if self.elbow[0] < 0 and self.elbow[1] > 0:
+        if self.elbow[0] < 0 and self.elbow[1] > 0 and self.wrist[1] > 0:
             
             # This IF statement makes sure that the upper arm can't move baackwards if its pointing up as if it was next to your head
             self.elbow[0] = 0
             self.elbow[1] = 2
-           
+            #print("1")
             # Ensure that the wrist point is updated with the elbow point
             self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
             
@@ -110,7 +110,8 @@ class drawArm:
             # This ELIF statement makes sure that the upper arm can't move baackwards if its pointing up as if it was next to the head
             self.elbow[0] = 0
             self.elbow[1] = 2
-            # Ensure that the wrist point is updated with the elbow point
+            #print("2")
+            #Ensure that the wrist point is updated with the elbow point
             self.wrist = self.elbow + np.array([self.length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
             
 
@@ -120,27 +121,53 @@ class drawArm:
             # This ELIF statement makes sure that the forearm doesn't  move past a particular point after it goes behind the head with a wrist X value of less than or equal to 0
             self.wrist[0] = -.1
             self.wrist[1] =  0
+            #print("3")
             
         elif any(self.getAngleShoulder() == 180) and self.wrist[1] <= .1 and self.wrist[0] >= 0:
             
             # This ELIF statement makes sure that the forearm doesn't  move past a particular point after it goes behind the head with a wrist X value of greater than or equal to 0
             self.wrist[1] = 0
             self.wrist[0] = -.1
+            print("4")
+
+
+        elif self.wrist[1] == 0 and self.wrist[0] < .5:
+
+            self.wrist[0] = 0
+            self.wrist[1] = .1
+            # Ensure that the wrist point is updated with the elbow point
+            self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
+            print("5")
+            
 
         elif any(self.getAngleShoulder() > 50) and self.elbow[0] < -.5 and self.elbow[1] < 0:
             
             # This ELIF statement makes sure that the upper arm can't move more than 50 degrees away from the torso if its pointing down and behind the body
             while all(self.getAngleShoulder() > 50):
-                
-                # The while statement moves the upper arm back towards the torso if it tries to go past 50 degrees away from the torso
+                #print("6")
+                #print(self.getAngleShoulder())
+                #The while statement moves the upper arm back towards the torso if it tries to go past 50 degrees away from the torso
+               
                 self.elbow[0] = self.elbow[0] + .01
                 self.elbow[1] = self.elbow[1] - .01
+               
+                #print("7")
+                #print(self.getAngleShoulder())
+
+                if self.wrist[0] <= -2 and self.wrist[1] <= -3:
+                    self.wrist[0] = -3
+                    self.wrist[1] = -2
+
+
 
                 self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
             if self.wrist[1] > -2 and self.wrist[0] < -2:
-                while self.wrist[1] > -2:
-                    self.wrist[0] = self.wrist[0] + .1
-                    self.wrist[1] = self.wrist[1] - .1
+                #while self.wrist[1] > -2:
+                self.wrist[0] = self.wrist[0] + .01
+                self.wrist[1] = self.wrist[1] - .01
+                print("8")
+                theta1 = 0 
+                self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
                 
                 
            
@@ -172,6 +199,13 @@ class drawArm:
         # Method used to calculate inverse kinematics using an x and y value taken from user input
         x1 = x
         y1 = y
+
+        if x1 == -3 or x1 == -4 and y1 == -1:
+            y1 = -2
+        elif x1 == -3 and y1 == 0:
+            y1 = 1
+        
+
         length0 = self.beamLengths[0]
         length1 = self.beamLengths[1]
 
@@ -199,21 +233,18 @@ class drawArm:
             theta1 = 3
 
         theta0 = atan2(y1, x1) - atan2((length1 * sin(theta1)) , (length0 + length1 * cos(theta1)))
-        '''if y1 > 1:
-            
-            theta0 = atan2(y1, x1) - atan2((length1 * sin(theta1)) , (length0 + length1 * cos(theta1)))
-            print(theta0)
-        if y1 <= 1: 
-            theta0 = theta0 * (-1)
-            print(theta0)'''
-
+        
+        print("theta0")
         print(theta0)
+        print("theta1")
+        print(theta1)
         # Assigning the T1 and T0 variables so the theta values can be used in other methods such as checkAngle
         self.T1 = theta1
         self.T0 = theta0
 
-        stepT0 = theta0 / 10
-        stepT1 = theta1 / 10
+        
+        stepT0 = theta0 / 20
+        stepT1 = theta1 / 20
         print (stepT0)
         stepT0init = stepT0
         stepT1init = stepT1
@@ -227,6 +258,7 @@ class drawArm:
      
         
         if theta0 > 0 and theta1 > 0:
+            print("while 1")
             while stepT0 < theta0 and stepT1 < theta1:
                 
                 stepT0 += stepT0init
@@ -235,18 +267,20 @@ class drawArm:
                 self.plot()
                 plt.ylim(-4, 4)
                 plt.xlim(-4, 4)
-                self.elbow = self.shoulder + np.array([length0 * cos(theta0), length0 * sin(theta0)])
-                self.wrist = self.elbow + np.array([length1 * cos(theta0 + theta1), length1 * sin(theta0 + theta1)])
+                self.elbow = self.shoulder + np.array([length0 * cos(stepT0), length0 * sin(stepT0)])
+                self.wrist = self.elbow + np.array([length1 * cos(stepT0 + stepT1), length1 * sin(stepT0 + stepT1)])
                 self.findAngleShoulder()
                 self.checkAngle()
                 self.findAngleShoulder()
-                print("while 1")
+                
 
         elif theta0 < 0:
-            stepT0 = -stepT0 
+            #stepT0 = -stepT0 
             print (stepT0)
-            while stepT0 > theta0 and stepT1 < theta1:
-                print (stepT0)
+            print("while 2")
+            while stepT0 > theta0 and stepT1 < theta1 or stepT0 > theta0:
+                
+                
                 stepT0 += stepT0init
                 stepT1 += stepT1init
                 self.plot()
@@ -257,14 +291,15 @@ class drawArm:
                 self.findAngleShoulder()
                 self.checkAngle()
                 self.findAngleShoulder()
-                print("while 2")
-                print (stepT0)
+                
 
-        
+            self.checkAngle()
 
 
         elif theta0 == 0:
+            print("while 3")
             while stepT1 < theta1:
+            
                 
                 stepT1 += stepT1init
                 self.plot()
@@ -275,14 +310,14 @@ class drawArm:
                 self.findAngleShoulder()
                 self.checkAngle()
                 self.findAngleShoulder()
-                print("while 3")
+                
 
-
+        
         elif theta1 == 0:
-            while stepT0 < theta0 or stepT0 > theta0:
+            print("while 4")
+            while stepT0 < theta0: 
                 
-                stepT0 -= stepT0init
-                stepT1 += stepT1init
+                stepT0 += stepT0init
                 self.plot()
                 plt.ylim(-4, 4)
                 plt.xlim(-4, 4)
@@ -291,7 +326,20 @@ class drawArm:
                 self.findAngleShoulder()
                 self.checkAngle()
                 self.findAngleShoulder()
-                print("while 4")
+               
+
+            while stepT0 > theta0:
+                print("while 5")
+                stepT0 -= stepT0init
+                self.plot()
+                plt.ylim(-4, 4)
+                plt.xlim(-4, 4)
+                self.elbow = self.shoulder + np.array([length0 * cos(stepT0), length0 * sin(stepT0)])
+                self.wrist = self.elbow + np.array([length1 * cos(stepT0 + stepT1), length1 * sin(stepT0 + stepT1)])
+                self.findAngleShoulder()
+                self.checkAngle()
+                self.findAngleShoulder()
+                
         
 
         
@@ -388,7 +436,7 @@ arm.updateJointsFK([theta0, theta1])
 arm.updateJointsIK(wristX, wristY)
 
 
-
+arm.beamLengths = [2,2]
 # Plotting the arm
 arm.plot()
 
