@@ -147,8 +147,8 @@ class drawArm:
                 #print(self.getAngleShoulder())
                 #The while statement moves the upper arm back towards the torso if it tries to go past 50 degrees away from the torso
                
-                self.elbow[0] = self.elbow[0] + .01
-                self.elbow[1] = self.elbow[1] - .01
+                self.elbow[0] = self.elbow[0] + .1
+                self.elbow[1] = self.elbow[1] - .1
                
                 #print("7")
                 #print(self.getAngleShoulder())
